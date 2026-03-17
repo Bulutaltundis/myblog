@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Backend Öğrenme Laboratuvarı",
+    "version": "1.1.0",
+    "description": "HTTP metodlarının (GET, POST, PUT, DELETE) nasıl çalıştığını anlamak için hazırlanan interaktif rehber."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/learning",
+      "description": "Geliştirme Sunucusu"
+    }
+  ],
+  "paths": {
+    "/data": {
+      "get": {
+        "summary": "Veriyi Oku (Read)",
+        "description": "Sunucudaki mevcut verileri liste halinde getirir.",
+        "responses": {
+          "200": { "description": "Başarılı", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Item" } } } } }
+        }
+      },
+      "post": {
+        "summary": "Yeni Veri Oluştur (Create)",
+        "description": "Sunucuya yeni bir kayıt eklemek için kullanılır.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "properties": { "title": { "type": "string" }, "content": { "type": "string" } } }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Kayıt Oluşturuldu" }
+        }
+      }
+    },
+    "/data/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+      ],
+      "put": {
+        "summary": "Veriyi Güncelle (Update)",
+        "description": "Belirli bir ID'ye sahip veriyi tamamen değiştirir.",
+        "responses": {
+          "200": { "description": "Güncellendi" }
+        }
+      },
+      "delete": {
+        "summary": "Veriyi Sil (Delete)",
+        "description": "Belirli bir ID'ye sahip veriyi sistemden kaldırır.",
+        "responses": {
+          "200": { "description": "Silindi" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Item": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      }
+    }
+  }
+}

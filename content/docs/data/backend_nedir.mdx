@@ -1,0 +1,48 @@
+---
+title: "Backend Dünyasına İlk Adım: HTTP Metotlarını Canlı Deneyimleyin"
+---
+
+
+Bir web uygulamasına tıkladığınızda arka planda neler olup bittiğini hiç merak ettiniz mi? "Backend" dediğimiz o gizemli mutfakta, veriler sürekli bir yerden bir yere taşınır, güncellenir veya silinir. Bugün, sadece teorik bilgiyle kalmayıp, hazırladığım **Interaktif API Laboratuvarı** ile bu süreci bizzat deneyimleyeceğiz.
+
+## Backend Nedir? Mutfaktaki Şefle Tanışın
+
+Backend, uygulamanızın beynidir. Siz bir butona bastığınızda (Frontend), backend bu isteği alır, işler ve size bir cevap döner. Bu iletişim genellikle **HTTP Metotları** adı verilen standart dillerle yapılır.
+
+Aşağıdaki dökümantasyonda, `blog.bulutaltundis.cloud` üzerinde çalışan gerçek bir API ile etkileşime geçebilirsiniz. Gelin, en temel 4 operasyonu beraber inceleyelim:
+
+## 1. GET: Veriyi Okumak (Kütüphaneden Kitap Almak)
+
+Bir sayfayı yenilediğinizde veya bir listeye baktığınızda arka planda bir **GET** isteği çalışır. Sunucuya "Bana elindeki verileri gönder" dersiniz.
+
+- **Deneyin**: Sol menüden GET `/data` butonuna basın ve Send deyin. Sunucunun size mevcut kayıtları nasıl bir liste (Array) halinde döndüğünü göreceksiniz.
+
+## 2. POST: Yeni Veri Oluşturmak (Kütüphaneye Kitap Bağışlamak)
+
+Yeni bir hesap açtığınızda veya bir mesaj attığınızda bir **POST** isteği gönderirsiniz. Bu metot, sunucuya yeni bir şey eklemek için kullanılır.
+
+- **Deneyin**: POST /data sekmesine geçin. "Body" kısmına istediğiniz bir başlık yazın ve gönderin. Sunucunun "201 Created" (Oluşturuldu) yanıtını nasıl verdiğine dikkat edin.
+
+## 3. PUT: Veriyi Güncellemek (Kitabı Yenilemek)
+Var olan bir bilgiyi değiştirmek istediğinizde (örneğin profil fotoğrafınızı güncellemek) **PUT** metodunu kullanırız. Genellikle hangi veriyi değiştireceğimizi belirtmek için bir ID kullanırız.
+
+Deneyin: PUT `/data/{id}` kısmında ID yerine 1 yazın ve veriyi güncelleyin. Backend'in değişikliği onaylayan mesajını anlık olarak alacaksınız.
+
+## 4. DELETE: Veriyi Silmek (Kitabı Kayıttan Düşmek)
+Artık ihtiyaç duyulmayan bir veriyi sistemden kaldırmak için kullanılır. Geri dönüşü olmayan bir işlem olduğu için dikkatli kullanılmalıdır!
+
+- **Deneyin**: DELETE `/data/{id}` metodunu kullanarak bir kaydı "hayali" olarak silin.
+
+## Neden Interaktif Dökümantasyon?
+Bu blog yazısında kullandığımız **Fumadocs OpenAPI** altyapısı, dökümantasyonu sadece okunacak bir metin olmaktan çıkarıp yaşayan bir oyun alanına dönüştürüyor.
+
+### Neleri Gözlemleyebilirsiniz?
+
+- **Durum Kodları**: Başarılı işlemlerde `200` veya `201`, hata olduğunda `404` gibi kodların ne anlama geldiğini.
+
+- **JSON Yapısı**: Verilerin süslü parantezler {} içinde nasıl organize edildiğini.
+
+- **Gecikme (Latency)**: Bir isteğin sunucuya gidip gelme süresini.
+
+## Hadi Deneyin!
+Aşağıdaki panel üzerinden kendi isteklerinizi gönderin. Backend dünyası artık sizin için bir gizem değil, yönetebileceğiniz bir sistem!
