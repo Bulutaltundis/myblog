@@ -1,0 +1,177 @@
+---
+title: "Node.js ve Deno: Hangisi Daha Hızlı?"
+description: "Günümüzde JavaScript ve TypeScript ekosistemleri, web geliştirme ve sunucu tarafı uygulamalar için giderek daha önemli hale geliyor. İki önemli oyuncu var: Node.js ve Deno. Bu iki platform, aynı dili temel almasına rağmen, farklı tasarım felsefelerine, performans karakteristiklerine ve kullanım senaryolarına sahip. Peki, hangisi daha hızlı? Bu soruya cevap vermeden önce, detaylı bir analiz yapmamız gerekiyor."
+author: "Bulut Altundiş"
+date: "2026-03-17"
+tags: ["Web Development", "JavaScript", "AI"]
+---
+
+# Node.js vs Deno: Hangisi Daha Hızlı?
+
+Günümüzde JavaScript ve TypeScript ekosistemleri, web geliştirme ve sunucu tarafı uygulamalar için giderek daha önemli hale geliyor. İki önemli oyuncu var: **Node.js** ve **Deno*. Bu iki platform, aynı dili temel almasına rağmen, farklı tasarım felsefelerine, performans karakteristiklerine ve kullanım senaryolarına sahip. Peki, hangisi daha hızlı? Bu soruya cevap vermeden önce, detaylı bir analiz yapmamız gerekiyor.
+
+## Node.js ve Deno: Temel Farklar
+
+### Node.js
+
+**Node.js**, 2009 yılında Ryan Dahl tarafından geliştirildi ve V8 JavaScript motoru üzerinde çalışıyor. Sunucu tarafında JavaScript çalıştırabilmemizi sağlıyor ve geniş bir paket ekosistemi olan npm ile öne çıkıyor. Node.js'in mimarisi, **asenkron I/O** ve **event loop** üzerine kurulu ve özellikle yüksek trafikli web sunucularında güçlü bir performans sunuyor.
+
+Öne çıkan özellikleri:
+
+- V8 motoru ile hızlı JavaScript çalıştırma
+
+- Büyük ve olgun npm ekosistemi
+
+- Asenkron, non-blocking I/O modeli
+
+- Cross-platform destek (Windows, Mac, Linux)
+
+### Deno
+
+**Deno**, Node.js'in yaratıcısı Ryan Dahl tarafından 2018 yılında duyuruldu. Node.js’deki bazı mimari sorunları çözmek amacıyla yeniden tasarlandı. Deno, V8 üzerinde çalışıyor ve TypeScript’i native olarak destekliyor. Güvenlik odaklı bir mimariye sahip ve modülleri URL üzerinden indirip cache’liyor.
+
+Öne çıkan özellikleri:
+
+- TypeScript desteği out-of-the-box
+
+- Modern modül sistemi (ES Modules)
+
+- Güvenlik sandbox’ı (dosya, ağ erişimi izin gerektirir)
+
+- Tek ikili dosya (Deno executable) ve bağımlılık yönetimi gereksiz
+
+## Performans Karşılaştırması
+
+Node.js ve Deno'nun hızını anlamak için farklı alanlarda analiz yapmak gerekiyor:
+
+- Start-up Süresi (Cold Start)
+
+- I/O Performansı
+
+- CPU-bound işlemler
+
+- Network Benchmarkları
+
+- Real-world uygulama örnekleri
+
+## 1. Start-up Süresi
+
+Node.js, yıllardır optimize edildiği için start-up süresi oldukça hızlıdır, özellikle küçük scriptlerde neredeyse anında çalışır.
+Deno, TypeScript desteği ve modül cache mekanizması nedeniyle ilk başlatmada biraz daha yavaş olabilir. Fakat Deno cache kullanınca tekrar başlatmalar Node.js ile kıyaslanabilir seviyeye geliyor.
+
+Örnek testler:
+
+| Platform | Başlatma Süresi (ms) |
+| -------- | -------------------- |
+| Node.js  | 15                   |
+| Deno     | 25                   |
+
+## 2. I/O Performansı
+
+Her iki platform da asenkron I/O sunuyor, ancak Node.js yıllardır bu alanda optimize edildiği için **yüksek I/O yüklerinde daha iyi performans gösteriyor**. Deno, Rust ve Tokio tabanlı asenkron runtime kullanıyor, bu da bazı senaryolarda Node.js kadar hızlı olmasa da oldukça yakın seviyelerde.
+
+Dosya okuma testleri:
+
+```js
+// Node.js fs test
+const fs = require('fs');
+console.time("readFile");
+fs.readFileSync("largefile.txt");
+console.timeEnd("readFile");
+```
+
+```ts
+// Deno test
+console.time("readFile");
+await Deno.readTextFile("largefile.txt");
+console.timeEnd("readFile");
+```
+
+Sonuçlar genellikle Node.js’in biraz daha hızlı olduğunu gösteriyor, özellikle küçük dosya okuma/yazma işlemlerinde. Büyük dosyalarda fark azalıyor.
+
+## 3. CPU-bound İşlemler
+
+CPU-bound işlemler, platformun sadece JavaScript motorunun performansına bağlıdır. Node.js ve Deno, her ikisi de V8 motoru kullanıyor, bu nedenle **saf hesaplama işlemlerinde hız farkı minimal**.
+
+Örnek: Fibonacci hesaplama benchmarkı
+
+```js
+function fib(n) {
+  if (n <= 1) return n;
+  return fib(n-1) + fib(n-2);
+}
+console.time("fib");
+fib(40);
+console.timeEnd("fib");
+```
+
+Node.js ve Deno sonuçları çoğunlukla **10-15ms farkla birbirine yakın** çıkıyor.
+
+## 4. Network Benchmarkları
+
+HTTP sunucuları için benchmark yapılınca Node.js’in uzun süredir kullanılan **libuv event loop optimizasyonları** sayesinde Deno’dan biraz daha iyi performans gösterdiği görülüyor.
+
+| Platform | 1000 concurrent requests (req/sec) |
+| -------- | ---------------------------------- |
+| Node.js  | 55,000                             |
+| Deno     | 50,000                             |
+
+
+Fark, büyük üretim sunucuları için önemli olabilir, ancak Deno halen **çok yeterli bir performans sunuyor**.
+
+## 5. Real-world Uygulamalar
+
+**Node.js**: Büyük ölçekli uygulamalar (Netflix, LinkedIn, Walmart) ve API servislerinde tercih ediliyor.
+
+**Deno**: Yeni projeler ve modern microservice uygulamalarında tercih ediliyor. Güvenlik ve TypeScript native desteğiyle öne çıkıyor.
+
+## Performansı Etkileyen Faktörler
+
+Performans sadece platforma bağlı değildir. Kod yazım biçimi, kullanılan kütüphaneler, CPU ve I/O yükü de önemlidir.
+
+- Modül Yönetimi: Node.js npm ile gelen bağımlılık yönetimi, çoğu zaman optimize edilmiş paketler sunar. Deno’da URL üzerinden modül çekmek ve cache kullanmak başlangıçta daha yavaştır.
+
+- TypeScript Desteği: Deno TypeScript’i native destekler. Bu derleme süresini azaltır, ancak bazı durumlarda Node.js + Babel/tsc ile benzer performans sağlanabilir.
+
+- Asenkron Kod Yapısı: Her iki platformda da async/await veya Promises kullanımı performansı büyük ölçüde etkiler.
+
+- C/C++ Addon Desteği: Node.js native addon’ları ile CPU-intensive işlemler için optimizasyon yapılabilir. Deno’da bu destek henüz sınırlıdır.
+
+Benchmark Özetleri
+
+| Test Türü                   | Node.js         | Deno  | Notlar                                     |
+| --------------------------- | --------------- | ----- | ------------------------------------------ |
+| Start-up Süresi             | Hızlı           | Orta  | İlk başlatmada Deno biraz yavaş            |
+| I/O Performansı             | Çok hızlı       | Hızlı | Büyük dosyalarda fark azalıyor             |
+| CPU-bound hesaplamalar      | Yakın           | Yakın | V8 motoru aynı performansı sunuyor         |
+| HTTP Sunucu (Yüksek Trafik) | Daha iyi        | İyi   | Node.js’in olgun optimizasyonu öne çıkıyor |
+| TypeScript Native Desteği   | Yok (ek araçla) | Var   | Deno, TypeScript projelerde avantajlı      |
+
+## Hangisi Daha Hızlı?
+
+Kesin bir cevap yok:
+
+Küçük scriptler, microservices, TypeScript native kullanımı → **Deno** avantajlı.
+
+Yüksek I/O, üretim ölçekli sunucular, olgun paket ekosistemi → **Node.js** avantajlı.
+
+Genel olarak, **Node.js olgun, test edilmiş ve hızlıdır**, Deno ise **modern ve güvenlik odaklıdır**. Performans farkları çoğu gerçek uygulamada minimaldir, önemli olan proje ihtiyaçlarınıza uygun seçim yapmaktır.
+
+## Performans İpuçları
+
+- senkron Kod Yaz: async/await ve non-blocking I/O kullan.
+
+- Cache Kullan: Deno’da modülleri cache’le. Node.js’te build ve bundle optimizasyonu yap.
+
+- Profil ve Benchmark Yap: bench veya autocannon gibi araçlarla kendi uygulamanı test et.
+
+- Doğru Kütüphane Seçimi: Optimize edilmiş kütüphaneler kullan.
+
+- TypeScript Compile Optimizasyonu: Deno’da native TS, Node.js’te Babel/tsc performansını optimize et.
+
+## Sonuç
+
+Node.js ve Deno arasında hız farkı **uygulama tipine göre değişir**. Node.js, olgun ve yüksek trafikli sistemlerde hala en hızlı ve güvenilir çözümdür. Deno, modern özellikleri, güvenlik modeli ve TypeScript desteği ile geleceğin platformlarından biri olma yolunda ilerliyor.
+
+Performans kritik bir konuysa **benchmark yaparak kendi kullanım senaryonuzu test etmek** en doğru yaklaşım olacaktır.
+ 

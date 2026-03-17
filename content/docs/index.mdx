@@ -1,0 +1,265 @@
+---
+title: "Swift ile Backend"
+date: "2026-01-01"
+---
+
+# Swift ile Backend Geliştirme: Baştan Sona Derinlemesine Rehber
+
+Swift denince çoğu kişinin aklına iOS uygulamaları gelir. Ancak son yıllarda Swift, sadece mobil değil aynı zamanda güçlü bir **backend dili** olarak da ciddi şekilde öne çıkmaya başladı. Performansı, güvenliği ve modern dil yapısıyla Swift; Node.js, Python ve Go gibi backend dünyasının güçlü oyuncularına alternatif olabilecek seviyeye ulaştı.
+Bu yazıda Swift ile backend geliştirmeyi **temelden ileri seviyeye kadar**, gerçek dünyaya uygun şekilde detaylı olarak ele alacağız.
+
+---
+
+## 1. Swift ile Backend Neden Mantıklı?
+
+Swift’in backend tarafında tercih edilmesinin birkaç güçlü sebebi var:
+
+### 🚀 Performans
+
+Swift, derlenen (compiled) bir dil olduğu için oldukça hızlıdır. C tabanlı yapısı sayesinde:
+
+- Düşük latency
+
+- Yüksek throughput
+
+- CPU dostu işlemler
+
+özellikle API ve mikroservislerde ciddi avantaj sağlar.
+
+### 🔒 Güvenlik
+
+- Optional yapısı sayesinde null hatalarını minimize eder
+
+- Strong typing ile runtime hataları azaltır
+
+### 🧠 Modern Dil Özellikleri
+
+- Async/Await
+
+- Protocol-oriented programming
+
+- Value types (struct)
+
+---
+
+## 2. Swift Backend Ekosistemi
+
+Swift backend tarafında en çok kullanılan framework:
+
+### Vapor
+
+Vapor, Swift ile backend geliştirmenin en popüler yoludur.
+
+- Öne çıkan özellikleri:
+
+- Express.js benzeri routing sistemi
+
+- ORM (Fluent)
+
+- WebSocket desteği
+
+- Middleware yapısı
+
+- JWT, auth sistemleri
+
+---
+
+## 3. Kurulum
+
+### Swift Kurulumu
+
+Mac kullanıyorsanız zaten hazırdır. Linux için:
+
+```bash
+sudo apt install swiftlang
+```
+### Vapor CLI Kurulumu
+```bash
+brew install vapor
+```
+
+veya
+
+```bash
+git clone https://github.com/vapor/toolbox.git
+cd toolbox
+swift build -c release
+sudo mv .build/release/vapor /usr/local/bin
+```
+
+---
+
+## 4. İlk Proje
+
+```bash
+vapor new MyBackend
+cd MyBackend
+vapor run
+```
+
+Tarayıcıda:
+```text
+http://localhost:8080
+```
+
+---
+
+## 5. Proje Yapısı
+
+```text
+Sources/
+ ├── App/
+ │   ├── Controllers/
+ │   ├── Models/
+ │   ├── Routes/
+ │   ├── Middleware/
+ │   └── configure.swift
+ ```
+
+ ---
+
+## 6. Routing Sistemi
+
+```swift
+app.get("hello") { req in
+    return "Hello Swift Backend!"
+}
+```
+
+### Parametreli route
+
+``` swift
+app.get("user", ":id") { req in
+    let id = req.parameters.get("id")!
+    return "User ID: \(id)"
+}
+```
+
+---
+
+## 7. Controller Yapısı
+
+```swift
+struct UserController: RouteCollection {
+    func boot(routes: RoutesBuilder) throws {
+        let users = routes.grouped("users")
+        
+        users.get(use: getAll)
+        users.post(use: create)
+    }
+
+    func getAll(req: Request) async throws -> [User] {
+        return try await User.query(on: req.db).all()
+    }
+
+    func create(req: Request) async throws -> User {
+        let user = try req.content.decode(User.self)
+        try await user.save(on: req.db)
+        return user
+    }
+}
+```
+
+---
+
+## 8. Model (Fluent ORM)
+
+```swift
+final class User: Model, Content {
+    static let schema = "users"
+
+    @ID(key: .id)
+    var id: UUID?
+
+    @Field(key: "name")
+    var name: String
+
+    @Field(key: "email")
+    var email: String
+
+    init() {}
+
+    init(id: UUID? = nil, name: String, email: String) {
+        self.id = id
+        self.name = name
+        self.email = email
+    }
+}
+```
+
+---
+
+## 9. Migration
+
+```swift
+struct CreateUser: Migration {
+    func prepare(on database: Database) -> EventLoopFuture<Void> {
+        database.schema("users")
+            .id()
+            .field("name", .string, .required)
+            .field("email", .string, .required)
+            .create()
+    }
+
+    func revert(on database: Database) -> EventLoopFuture<Void> {
+        database.schema("users").delete()
+    }
+}
+```
+
+---
+
+## 10. Database Bağlantısı
+
+### PostgreSQL örneği:
+
+```swift
+app.databases.use(.postgres(
+    hostname: "localhost",
+    username: "postgres",
+    password: "password",
+    database: "mydb"
+), as: .psql)
+```
+
+---
+
+## 11. Middleware Sistemi
+```swift
+struct AuthMiddleware: Middleware {
+    func respond(to request: Request, chainingTo next: Responder) async throws -> Response {
+        guard request.headers.bearerAuthorization != nil else {
+            throw Abort(.unauthorized)
+        }
+        return try await next.respond(to: request)
+    }
+}
+```
+
+---
+
+## 12. JWT Authentication
+
+```swift
+struct Payload: JWTPayload {
+    var exp: ExpirationClaim
+
+    func verify(using signer: JWTSigner) throws {
+        try exp.verifyNotExpired()
+    }
+}
+```
+
+---
+
+## 13. Async/Await Kullanımı
+
+### Swift backend’in en güçlü yanlarından biri:
+
+
+```swift
+app.get("async") { req async -> String in
+    try await Task.sleep(nanoseconds: 1_000_000_000)
+    return "Done"
+}
+```
