@@ -263,3 +263,133 @@ app.get("async") { req async -> String in
     return "Done"
 }
 ```
+
+---
+
+## 14. WebSocket
+
+```swift
+app.webSocket("chat") { req, ws in
+    ws.onText { ws, text in
+        ws.send("Echo: \(text)")
+    }
+}
+```
+
+## 15. Dosya Yükleme
+
+```swift
+struct Upload: Content {
+    var file: File
+}
+
+app.post("upload") { req async throws -> String in
+    let upload = try req.content.decode(Upload.self)
+    return "Uploaded: \(upload.file.filename)"
+}
+```
+
+## 16. Swift Backend vs Node.js
+
+| Özellik    | Swift         | Node.js    |
+| ---------- | ------------- | ---------- |
+| Performans | 🔥 Çok yüksek | Orta       |
+| Memory     | Düşük         | Yüksek     |
+| Async      | Native        | Event loop |
+| Öğrenme    | Orta          | Kolay      |
+
+## 17. Deployment
+Docker ile
+```dockerfile
+FROM swift:5.9
+WORKDIR /app
+COPY . .
+RUN swift build -c release
+CMD ["./.build/release/Run"]
+```
+
+## 18. Production Ayarları
+
+- Reverse proxy (NGINX)
+
+- HTTPS (Let's Encrypt)
+
+- Logging
+
+- Rate limiting
+
+## 19. Mikroservis Mimarisi
+
+Swift backend ile:
+
+- API Gateway
+
+- Auth Service
+
+- User Service
+
+gibi yapılar kurulabilir.
+
+## 20. Gerçek Dünya Senaryosu
+
+Bir SaaS uygulaması düşünün:
+
+- Swift backend (API)
+
+- PostgreSQL (DB)
+
+- Redis (cache)
+
+- SwiftNIO (network layer)
+
+## 21. Avantajlar & Dezavantajlar
+
+### ✅ Avantajlar
+
+- Ultra hızlı
+
+- Tip güvenli
+
+- Modern syntax
+
+### ❌ Dezavantajlar
+
+- Ekosistem küçük
+
+- Hosting seçenekleri az
+
+- Topluluk Node kadar büyük değil
+
+## 22. Ne Zaman Swift Backend Kullanmalı?
+
+Şu durumlarda çok mantıklı:
+
+### Yüksek performans gerekiyorsa
+
+- iOS ile ortak dil istiyorsan
+
+- Mikroservis kuruyorsan
+
+## 23. İleri Seviye Konular
+
+- SwiftNIO internals
+
+- Custom middleware pipeline
+
+- GraphQL (Vapor + Graphiti)
+
+- Distributed systems
+
+ -Actor-based concurrency
+
+## Sonuç
+
+Swift artık sadece mobil dili değil. Doğru kullanıldığında:
+
+👉 Node.js kadar esnek
+👉 Go kadar hızlı
+👉 Rust kadar güvenli
+
+bir backend çözümüne dönüşebilir.
+
+Eğer modern, performanslı ve geleceğe yönelik bir backend stack arıyorsan Swift kesinlikle denemeye değer.
