@@ -2,10 +2,20 @@ import { RootProvider } from 'fumadocs-ui/provider/next';
 import './global.css';
 import { Inter } from 'next/font/google';
 import Script from 'next/script'; // 1. Bunu ekle
+import {Metadata} from 'next';
 
 const inter = Inter({
   subsets: ['latin'],
 });
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Bulut Altundiş',
+    default: 'Bulut Altundiş | Blog',
+  },
+  description: 'Yazılım geliştirme, Next.js ve teknoloji üzerine blog yazılarım.',
+  metadataBase: new URL('https://blog.bulutaltundis.cloud'), // Kendi domainini yaz
+};
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -28,3 +38,4 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
+
