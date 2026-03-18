@@ -1,29 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// PUT: Veriyi günceller
-export async function PUT(
-  request: NextRequest, 
-  { params }: { params: Promise<{ id: string }> } // params artık bir Promise
+// 1. Tip tanımını yapıyoruz: params artık bir Promise.
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
+// GET: Tekil veriyi oku
+export async function GET(
+  request: NextRequest,
+  { params }: RouteContext
 ) {
-  const resolvedParams = await params; // await ederek içindeki verilere ulaşıyoruz
-  const id = resolvedParams.id;
+  const { id } = await params; // await kullanımı ZORUNLUDUR
+  
+  return NextResponse.json({
+    id: parseInt(id),
+    title: "Örnek Veri",
+    status: "Okundu"
+  });
+}
+
+// PUT: Veriyi güncelle
+export async function PUT(
+  request: NextRequest,
+  { params }: RouteContext
+) {
+  const { id } = await params;
+  const body = await request.json();
 
   return NextResponse.json({
     message: `ID'si ${id} olan kayıt güncellendi.`,
+    receivedData: body,
     updatedAt: new Date().toISOString()
   });
 }
 
-// DELETE: Veriyi siler
+// DELETE: Veriyi sil
 export async function DELETE(
-  request: NextRequest, 
-  { params }: { params: Promise<{ id: string }> } // Burada da aynı değişiklik
+  request: NextRequest,
+  { params }: RouteContext
 ) {
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
+  const { id } = await params;
 
   return NextResponse.json({
-    message: `ID'si ${id} olan kayıt başarıyla silindi.`,
+    message: `ID'si ${id} olan kayıt (${id}) başarıyla silindi.`,
     success: true
   });
-}
+} // <--- Buradaki virgülü sildik, süslü parantezi kapattık.
