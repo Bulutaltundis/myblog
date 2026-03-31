@@ -19,6 +19,9 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+
+  const gaId = process.env.NEXT_PUBLIC_GA_ID
+  
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
       <head>
@@ -35,8 +38,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="flex flex-col min-h-screen">
         <RootProvider>{children}</RootProvider>
-        
-        <GoogleAnalytics gaId="G-H36N17NJT1" />
+
+       {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>
   );
