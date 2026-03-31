@@ -3,6 +3,7 @@ import './global.css';
 import { Inter } from 'next/font/google';
 import Script from 'next/script'; // 1. Bunu ekle
 import {Metadata} from 'next';
+import { GoogleAnalytics } from '@next/third-parties/google'; // Import et
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,6 +35,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="flex flex-col min-h-screen">
         <RootProvider>{children}</RootProvider>
+        
+        <GoogleAnalytics gaId="G-H36N17NJT1" />
       </body>
     </html>
   );
